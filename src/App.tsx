@@ -1,26 +1,22 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Route, Routes } from 'react-router-dom';
+import { Box, Container } from '@mui/material';
 
-function App() {
+import Navbar from './components/Navbar/Navbar';
+import AddProject from './components/Project/AddProject';
+import UpdateProject from './components/Project/UpdateProject';
+import FilterProject from './components/Project/FilterProject';
+const App: React.FC = () => {
+  console.log('App renderer');
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+<Box bgcolor={"white"}>
+           <Routes>
+        <Route path="/add" element={<AddProject  />} />
+                <Route path="/FilterProject" element={<FilterProject    />} />
+      </Routes> 
+</Box>
 
+
+  );
+};
 export default App;
