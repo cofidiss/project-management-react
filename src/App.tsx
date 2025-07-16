@@ -7,6 +7,9 @@ import AddProject from './components/Project/AddProject';
 import UpdateProject from './components/Project/UpdateProject';
 import FilterProject from './components/Project/FilterProject';
 import ProjectDetail from './components/Project/ProjectDetail';
+import Login from './components/Login/Login';
+import SignUp from './components/SignUp/SignUp';
+
 const App: React.FC = () => {
   console.log('App renderer');
   return (
@@ -21,7 +24,9 @@ const App: React.FC = () => {
   }}
 >
   <Routes>
-    <Route path="/add" element={<AddProject />} />
+      <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+    <Route path="/project/add" element={<AddProject />} />
     <Route path="/project/list" element={<FilterProject />} />
     <Route path="/project/detail/:id" element={<ProjectDetail />} />
   </Routes>
