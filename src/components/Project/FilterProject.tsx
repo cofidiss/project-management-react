@@ -84,7 +84,7 @@ const FilterProject: React.FC = () => {
 
   const defaultFilterParam: FilterProjectParameters = {
     pageNumber: 0, // Default değer
-    pageSize: 20,
+    pageSize: 5,
   };
   const [filteredProjectList, setFilteredProjectList] = useState<
     FilteredProject[]
@@ -131,13 +131,17 @@ const FilterProject: React.FC = () => {
     );
     filterProjects(filterProjectParam);
   }, []);
+useEffect(() => {
+  
+    filterProjects(filterProjectParam);
+  }, [filterProjectParam.pageNumber, filterProjectParam.pageSize]);
 
   const handlePageChange = (event: unknown, newPage: number) => {
     setFilterProjectParam((prevState) => ({
       ...prevState,
-      pageNumber: newPage + 1,
+      pageNumber: newPage ,
     }));
-    filterProjects(filterProjectParam);
+
   };
 
   const handleRowsPerPageChange = (
@@ -146,10 +150,9 @@ const FilterProject: React.FC = () => {
     const newSize = parseInt(event.target.value, 10);
     setFilterProjectParam((prevState) => ({
       ...prevState,
-      pageSize: newSize,
-      pageNumber: 1,
+      pageSize: newSize
     }));
-    filterProjects(filterProjectParam);
+
   };
 
   // Filtreleri temizleme fonksiyonu

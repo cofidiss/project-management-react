@@ -172,11 +172,14 @@ const ProjectList: React.FC<ProjectListProps> = ({
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={filteredProjectList.length}
+        count={-1}
         rowsPerPage={pageSize}
         page={pageNumber }
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleRowsPerPageChange}
+          nextIconButtonProps={{
+    disabled: filteredProjectList.length === 0
+  }}
       />
     </div>
   );
