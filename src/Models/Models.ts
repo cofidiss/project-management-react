@@ -122,6 +122,7 @@ export type AddTaskFormState = {
   plannedStartDate: Dayjs | null;
   plannedEndDate: Dayjs | null;
   description?: string;
+  projectId?: string | null;
 };
 export type UpdateTaskFormState = {
   name: string;

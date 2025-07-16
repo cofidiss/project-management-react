@@ -26,7 +26,9 @@ function reducer(state: AddTaskFormState, action: FormActionType<AddTaskFormStat
   }
 }
 
-const AddTask: React.FC<AddTaskProps> = ({ projectId , getTaskForProject }) => {
+const AddTask: React.FC<AddTaskProps> = ({ projectId , getTaskForProject,parentTaskId }) => {
+  initialState.parentTaskId = parentTaskId || ''; 
+    initialState.projectId = projectId || ''; 
   const [formState, dispatch] = useReducer(reducer, initialState);
   const baseUrl = process.env.REACT_APP_BASE_URL;
   const { startLoading, stopLoading, setModal2State } = useContext(AppContext);
@@ -46,15 +48,15 @@ const AddTask: React.FC<AddTaskProps> = ({ projectId , getTaskForProject }) => {
   }, []);
 
   const handleAdd = () => {
-
+debugger;
     const payload = {
       name: formState.name,
-      projectId: projectId ? Number(projectId) : null,
-      parentTaskId: formState.parentTaskId ? Number(formState.parentTaskId) : null,      
-      priority: formState.priority ? Number(formState.priority) : null,
-      totalRequiredManHour: formState.totalRequiredManHour ? Number(formState.totalRequiredManHour) : null,
-      plannedStartDate: formState.plannedStartDate?.toISOString(),
-      plannedEndDate: formState.plannedEndDate?.toISOString()
+      projectId: formState.projectId ,
+      parentTaskId: formState.parentTaskId ,      
+      priority: formState.priority ,
+      totalRequiredManHour: formState.totalRequiredManHour,
+      plannedStartDate: formState.plannedStartDate,
+      plannedEndDate: formState.plannedEndDate
     };
 
     startLoading();
