@@ -173,7 +173,7 @@ const FilterProject: React.FC = () => {
     } finally {
       stopLoading();
     }
-  };
+  };  
   return (
     <Container>
       <Typography variant="h5" align="center" gutterBottom>
@@ -181,135 +181,156 @@ const FilterProject: React.FC = () => {
       </Typography>
 
       {/* Arama Formu */}
-      <Grid container spacing={2}>
-        {/* İlk satır: Order No, Address, Total Amount Start, Total Amount End */}
-        <Grid size={{ xs: 6, sm: 3 }}>
-          <TextField
-            label="Project Name"
-            fullWidth
-            value={filterProjectParam.name ?? ""}
-            onChange={(e) =>
-              setFilterProjectParam((prevState) => ({
-                ...prevState,
-                name: e.target.value,
-              }))
-            }
-          />
+ <Grid container spacing={2}>
+  <Grid  size={{ xs: 12, sm: 6, md: 4 }}>
+    <Box display="flex" alignItems="center">
+      <Typography sx={{ minWidth: 120, mr: 2 }} variant="subtitle2">
+        Project Name
+      </Typography>
+      <TextField
+        fullWidth
+        value={filterProjectParam.name ?? ""}
+        onChange={(e) =>
+          setFilterProjectParam((prevState) => ({
+            ...prevState,
+            name: e.target.value,
+          }))
+        }
+      />
+    </Box>
+  </Grid>
+  <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+    <Box display="flex" alignItems="center">
+      <Typography sx={{ minWidth: 120, mr: 2 }} variant="subtitle2">
+        Status
+      </Typography>
+      <Select
+        fullWidth
+        value={filterProjectParam.statusId == undefined ? -1 : filterProjectParam.statusId}
+        onChange={(e) =>
+          setFilterProjectParam((prevState) => ({
+            ...prevState,
+            statusId: isNaN(Number(e.target.value)) ? undefined : Number(e.target.value),
+          }))
+        }
+      >
+        <MenuItem value="-1">
+          <em>Choose Status</em>
+        </MenuItem>
+        {statusLov.map((status) => (
+          <MenuItem key={status.id} value={status.id}>
+            {status.name}
+          </MenuItem>
+        ))}
+      </Select>
+    </Box>
+  </Grid>
+  <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+    <Box display="flex" alignItems="center">
+      <Typography sx={{ minWidth: 120, mr: 2 }} variant="subtitle2">
+        Category
+      </Typography>
+      <Select
+        fullWidth
+        value={filterProjectParam.categoryId == undefined ? -1 : filterProjectParam.categoryId}
+        onChange={(e) =>
+          setFilterProjectParam((prevState) => ({
+            ...prevState,
+            categoryId: isNaN(Number(e.target.value)) ? undefined : Number(e.target.value),
+          }))
+        }
+      >
+        <MenuItem value="-1">
+          <em>Choose Category</em>
+        </MenuItem>
+        {categoryLov.map((category) => (
+          <MenuItem key={category.id} value={category.id}>
+            {category.name}
+          </MenuItem>
+        ))}
+      </Select>
+    </Box>
+  </Grid>
+   <Grid size={{ xs: 12, sm: 6 ,md:4}}>
+          <Box display="flex" alignItems="center">
+      <Typography sx={{ minWidth: 120, mr: 2 }} variant="subtitle2">
+        Actual Date Range
+      </Typography>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DateRangePicker
+          localeText={{ start: "Planned Start", end: "Planned End" }}
+          slotProps={{
+            actionBar: {
+              actions: ["clear"],
+            },
+          }}
+          value={[
+            filterProjectParam.actualStartDate as Dayjs,
+            filterProjectParam.actualEndDate as Dayjs,
+          ]}
+          onChange={(newValue) => {
+            setFilterProjectParam((prevState) => ({
+              ...prevState,
+              actualStartDate: newValue[0] as Dayjs,
+              actualEndDate: newValue[1] as Dayjs,
+            }));
+          }}
+        />
+      </LocalizationProvider>
+    </Box>
         </Grid>
-        <Grid size={{ xs: 6, sm: 3 }}>
-          <Select
-            label="Status"
-            fullWidth
-            value={filterProjectParam.statusId == undefined ? -1 : filterProjectParam.statusId}
-            onChange={(e) =>
-              setFilterProjectParam((prevState) => ({
-                ...prevState,
-                statusId: isNaN(Number(e.target.value)) ? undefined : Number(e.target.value),
-              }))
-            }
-          >
-              <MenuItem value="-1">
-              <em>Choose Status</em>
-            </MenuItem>
-            {statusLov.map((status) => (
-              <MenuItem key={status.id} value={status.id}>
-                {status.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </Grid>
-        <Grid>
-          <Select
-            label="Category"
-            fullWidth
-            value={filterProjectParam.categoryId == undefined ? -1 : filterProjectParam.categoryId}
-            onChange={(e) =>
-              setFilterProjectParam((prevState) => ({
-                ...prevState,
-                categoryId: isNaN(Number(e.target.value)) ? undefined : Number(e.target.value),
-              }))
-            }
-          >
-            <MenuItem value="-1">
-              <em>Choose Category</em>
-            </MenuItem>
-            {categoryLov.map((category) => (
-              <MenuItem key={category.id} value={category.id}>
-                {category.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </Grid>
+  <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+    <Box display="flex" alignItems="center">
+      <Typography sx={{ minWidth: 120, mr: 2 }} variant="subtitle2">
+        Planned Date Range
+      </Typography>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DateRangePicker
+          localeText={{ start: "Planned Start", end: "Planned End" }}
+          slotProps={{
+            actionBar: {
+              actions: ["clear"],
+            },
+          }}
+          value={[
+            filterProjectParam.plannedStartDate as Dayjs,
+            filterProjectParam.plannedEndDate as Dayjs,
+          ]}
+          onChange={(newValue) => {
+            setFilterProjectParam((prevState) => ({
+              ...prevState,
+              plannedStartDate: newValue[0] as Dayjs,
+              plannedEndDate: newValue[1] as Dayjs,
+            }));
+          }}
+        />
+      </LocalizationProvider>
+    </Box>
+  </Grid>
+  {/* Diğer filtreler için aynı yapıyı kullanabilirsiniz */}
 
-        {/* İkinci satır: Teslimat Tarihi ve Oluşturma Tarihi Aralığı */}
-        <Grid size={{ xs: 12, sm: 6 }}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateRangePicker
-              slotProps={{
-                actionBar: {
-                  actions: ["clear"],
-                },
-              }}
-              value={[
-                filterProjectParam.actualStartDate as Dayjs,
-                filterProjectParam.actualEndDate as Dayjs,
-              ]}
-              localeText={{ start: "Actual Start", end: "Actual End" }}
-              onChange={(newValue) => {
-                setFilterProjectParam((prevState) => ({
-                  ...prevState,
-                  actualStartDate: newValue[0] as Dayjs,
-                  actualEndDate: newValue[1] as Dayjs,
-                }));
-              }}
-            />
-          </LocalizationProvider>
-        </Grid>
-
-        <Grid size={{ xs: 6, sm: 12 }}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateRangePicker
-              localeText={{ start: "Planned Start", end: "Planned End" }}
-              slotProps={{
-                actionBar: {
-                  actions: ["clear"],
-                },
-              }}
-              value={[
-                filterProjectParam.plannedStartDate as Dayjs,
-                filterProjectParam.plannedEndDate as Dayjs,
-              ]}
-              onChange={(newValue) => {
-                setFilterProjectParam((prevState) => ({
-                  ...prevState,
-                  plannedStartDate: newValue[0] as Dayjs,
-                  plannedEndDate: newValue[1] as Dayjs,
-                }));
-              }}
-            />
-          </LocalizationProvider>
-        </Grid>
-
+</Grid>
         <Grid sx={{ xs: 12, display: "flex", justifyContent: "flex-end" }}>
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<SearchIcon />}
-            onClick={() => filterProjects(filterProjectParam)}
-            style={{ marginRight: "10px" }}
-          >
-            Search
-          </Button>
-          <Button
-            variant="outlined"
-            color="secondary"
-            startIcon={<ClearIcon />}
-            onClick={clearFilters}
-          >
-            Clear Filter
-          </Button>
+            <Box display="flex" justifyContent="flex-end" width="100%" mt={2}>
+      <Button
+        variant="contained"
+        color="primary"
+        startIcon={<SearchIcon />}
+        onClick={() => filterProjects(filterProjectParam)}
+        style={{ marginRight: "10px" }}
+      >
+        Search
+      </Button>
+      <Button
+        variant="outlined"
+        color="secondary"
+        startIcon={<ClearIcon />}
+        onClick={clearFilters}
+      >
+        Clear Filter
+      </Button>
+    </Box>
         </Grid>
-      </Grid>
       <ProjectList
         pageNumber={filterProjectParam.pageNumber}
         pageSize={filterProjectParam.pageSize}
