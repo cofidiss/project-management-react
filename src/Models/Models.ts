@@ -1,38 +1,11 @@
+import exp from 'constants';
 import dayjs, { Dayjs } from 'dayjs';
 import { ReactNode } from 'react';
 
-export interface BottomMenuProps {
-  onMenuClick: () => void;
-}
 
-export interface SidebarProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
 
 // FlightData.ts
-export interface FlightData {
-  data: FlightDataItem[];
-}
 
-// FlightDataItem.ts
-export interface FlightDataItem {
-  flightId: string; // "fr24Id" mapped to "flightId"
-  latitude: number; // "lat" mapped to "latitude"
-  longitude: number; // "lon" mapped to "longitude"
-  altitude: number; // "alt" mapped to "altitude"
-  groundSpeed: number; // "gspeed" mapped to "groundSpeed"
-  track: number; // "track" mapped to "track"
-  timestamp: string; // "timestamp" mapped to "timestamp"
-  flightNumber: string; // "flight" mapped to "flightNumber"
-  callsign: string; // "callsign" mapped to "callsign"
-  hexCode: string; // "hex" mapped to "hexCode"
-  aircraftType: string; // "type" mapped to "aircraftType"
-  registration: string; // "reg" mapped to "registration"
-  originIcao: string; // "origIcao" mapped to "originIcao"
-  destinationIcao: string; // "destIata" mapped to "destinationIcao"
-  estimatedArrival: string;
-}
 export type globalCss = {
   componentBackgroundColor: string;
 };
@@ -94,6 +67,19 @@ export type FilteredProject = {
 
 };
 
+
+export type ProjectDetailInfo = {
+  id: number;
+  name?: string;
+  description?: string;
+  actualStartDate?: string ;
+    actualEndDate?: string ;
+      plannedStartDate?: string ;
+    plannedEndDate?: string ;
+  status?: string;
+  category?: string;
+
+};
 export type ProjectListProps = {
   filteredProjectList: FilteredProject[];
   pageNumber: number;
@@ -120,38 +106,71 @@ export type  AddProjectFormState = {
   categoryId?: number;
   statusId?: number;
 };
+export type  UpdateProjectFormState = {
+  name?: string;
+  description?: string;
+  plannedStartDate?: Dayjs ;
+  plannedEndDate?: Dayjs ;
+  categoryId?: number;
+  statusId?: number;
+};
 export type AddTaskFormState = {
   name: string;
-  projectId: number | '';
-  parentTaskId: number | '';
-  categoryId: number | '';
+  parentTaskId: string ;
   priority: number | '';
   totalRequiredManHour: number | '';
   plannedStartDate: Dayjs | null;
   plannedEndDate: Dayjs | null;
   description?: string;
 };
+export type UpdateTaskFormState = {
+  name: string;
+  projectId: string | null;
+  parentTaskId: string | null;
+  statusId: string | null;
+  hasChildTasks?: boolean;
+  priority: number | '';
+  totalRequiredManHour: number | '';
+  plannedStartDate: Dayjs | null;
+  plannedEndDate: Dayjs | null;
+  description?: string;
+  completedManHour: number | '';
+};
+export type UpdateTaskProps = {
+taskId:string | null;
+getTaskForProject: (projectId: string | null) => void;
+};
+
+
 export type FormActionType<FormType> =
   | { type: 'SET_FIELD'; field: keyof FormType; value: any }
   | { type: 'RESET' }
   | { type: 'REPLACE'; value: FormType };
-
-
-export type FlightCoordinateRangeFilter = {
-  latitudeMin?: number;
-  latitudeMax?: number;
-  longitudeMin?: number;
-  longitudeMax?: number;
+export type AddTaskProps = {
+  projectId: string | null;
+  parentTaskId?: string | null;
+  getTaskForProject: (projectId: string | null) => void;  
 };
+export type TaskInfo = {
+id: number;
+  name: string;
+  totalRequiredManHour: number;
+  completedManHour: number;
+  actualStartDate: string;
+  actualEndDate: string;
+  plannedStartDate: string;
+  plannedEndDate: string;
+  projectId: number;
+  parentTaskId: number | null;
+  priority: number;
+  status: string;  
+    statusId: number;  
+    hasChildTasks: boolean;
+}
+export type TaskListProps = {
+  projectId: string | null ;
+}
 
-export type SideBarformState = {
-  altitudeMin?: number;
-  altitudeMax?: number;
-  groundSpeedMin?: number;
-  groundSpeedMax?: number;
-  category?: string;
-  sessionId?: string;
-};
 
 export type SignUpFormState = {
   username: string;

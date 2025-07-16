@@ -70,22 +70,22 @@ const Navbar: React.FC = () => {
 
   // Project List & Add handlers
   const handleProjectListClick = () => {
-    navigate("/projects/list");
+    navigate("/project/list");
     handleProjectsClose();
   };
   const handleProjectAddClick = () => {
-    navigate("/projects/add");
+    navigate("/project/add");
     handleProjectsClose();
   };
 
   // Report submenu example (örnek)
   const handleReportSummaryClick = () => {
-    navigate("/reports/summary");
+    navigate("/report/summary");
     handleReportClose();
   };
 
   const handleReportDetailClick = () => {
-    navigate("/reports/detail");
+    navigate("/report/detail");
     handleReportClose();
   };
 

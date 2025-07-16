@@ -5,10 +5,10 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { setLovState } from '../../utils';
 import { AppContext } from '../../Contexts/AppContext';
-import { AddProjectFormState, CommonLov, FormActionType, UpdateProjectProps } from '../../Models/Models';
+import { AddProjectFormState, CommonLov, FormActionType, UpdateProjectFormState, UpdateProjectProps } from '../../Models/Models';
 
 
-const reducer = (state: AddProjectFormState | null, action: FormActionType<AddProjectFormState>): AddProjectFormState | null  => {
+const reducer = (state: UpdateProjectFormState | null, action: FormActionType<UpdateProjectFormState>): UpdateProjectFormState | null  => {
   switch (action.type) {
     case 'SET_FIELD':
       return { ...state, [action.field]: action.value };

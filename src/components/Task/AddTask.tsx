@@ -2,17 +2,15 @@ import { Box, Button, FormControl, InputLabel, MenuItem, Select, TextField } fro
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { useContext, useEffect, useReducer, useState } from "react";
 import { setLovState } from "../../utils";
-import { AddTaskFormState, CommonLov, FormActionType } from "../../Models/Models";
+import { AddTaskFormState, AddTaskProps, CommonLov, FormActionType } from "../../Models/Models";
 import { AppContext } from "../../Contexts/AppContext";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 const initialState: AddTaskFormState = {
     name: '',
-    projectId: '',
     parentTaskId: '',
-    categoryId: '',
-    priority: '',
-    totalRequiredManHour: '',
+    priority: 1,
+    totalRequiredManHour: 0,
     plannedStartDate: dayjs(),
     plannedEndDate: dayjs(),
     description: ''
@@ -28,40 +26,73 @@ function reducer(state: AddTaskFormState, action: FormActionType<AddTaskFormStat
   }
 }
 
-const AddTask: React.FC = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+const AddTask: React.FC<AddTaskProps> = ({ projectId , getTaskForProject }) => {
+  const [formState, dispatch] = useReducer(reducer, initialState);
   const baseUrl = process.env.REACT_APP_BASE_URL;
-  const { startLoading, stopLoading } = useContext(AppContext);
+  const { startLoading, stopLoading, setModal2State } = useContext(AppContext);
   const [categoryLov, setCategoryLov] = useState<CommonLov[]>([]);
   // Proje ve parent task için örnek veri, API'den çekebilirsiniz
-  const [projectLov, setProjectLov] = useState<{ id: number; name: string }[]>([]);
-  const [parentTaskLov, setParentTaskLov] = useState<{ id: number; name: string }[]>([]);
+
 
   useEffect(() => {
     setLovState(
       setCategoryLov,
-      "api/task/category",
+      "api/task/getStatusLov",
       startLoading,
       stopLoading,
       baseUrl
     );
-    // Proje ve parent task listelerini burada fetch edebilirsiniz
-    // setProjectLov([...]);
-    // setParentTaskLov([...]);
+
   }, []);
 
   const handleAdd = () => {
 
     const payload = {
-      name: state.name,
-      projectId: state.projectId ? Number(state.projectId) : null,
-      parentTaskId: state.parentTaskId ? Number(state.parentTaskId) : null,
-      categoryId: state.categoryId ? Number(state.categoryId) : null,
-      priority: state.priority ? Number(state.priority) : null,
-      totalRequiredManHour: state.totalRequiredManHour ? Number(state.totalRequiredManHour) : null,
-      plannedStartDate: state.plannedStartDate?.toISOString(),
-      plannedEndDate: state.plannedEndDate?.toISOString()
+      name: formState.name,
+      projectId: projectId ? Number(projectId) : null,
+      parentTaskId: formState.parentTaskId ? Number(formState.parentTaskId) : null,      
+      priority: formState.priority ? Number(formState.priority) : null,
+      totalRequiredManHour: formState.totalRequiredManHour ? Number(formState.totalRequiredManHour) : null,
+      plannedStartDate: formState.plannedStartDate?.toISOString(),
+      plannedEndDate: formState.plannedEndDate?.toISOString()
     };
+
+    startLoading();
+let modalMessage :string;
+
+    fetch(`${baseUrl}/api/task/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+      .then((response) => {
+        if (response.ok) {
+            modalMessage = 'task added successfully';
+
+        } else {
+            return response.text().then((data) => {
+              modalMessage = data;
+            });
+        }
+      })
+      .catch((error) => {
+        modalMessage = 'Error in task addition';
+      })
+      .finally(() => {
+  setModal2State({
+    isOpen:true,
+    title:modalMessage,
+    okButtonText:"Ok",
+    okButtonClick:()=> {
+  getTaskForProject(projectId)
+      setModal2State({isOpen:false});
+    },
+            
+            })
+        stopLoading();
+      });
     console.log(payload);
     dispatch({ type: 'RESET' });
   };
@@ -71,76 +102,36 @@ const AddTask: React.FC = () => {
       <Box display="flex" flexDirection="column" gap={2} maxWidth={400}>
         <TextField
           label="Task Name"
-          value={state.name}
+          value={formState.name}
           onChange={e => dispatch({ type: 'SET_FIELD', field: 'name', value: e.target.value })}
           required
         />
-        <FormControl fullWidth>
-          <InputLabel id="project-label">Project</InputLabel>
-          <Select
-            labelId="project-label"
-            label="Project"
-            value={state.projectId}
-            onChange={e => dispatch({ type: 'SET_FIELD', field: 'projectId', value: Number(e.target.value) })}
-            required
-          >
-            {projectLov.map(project => (
-              <MenuItem key={project.id} value={project.id}>{project.name}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl fullWidth>
-          <InputLabel id="parent-task-label">Parent Task</InputLabel>
-          <Select
-            labelId="parent-task-label"
-            label="Parent Task"
-            value={state.parentTaskId}
-            onChange={e => dispatch({ type: 'SET_FIELD', field: 'parentTaskId', value: Number(e.target.value) })}
-          >
-            <MenuItem value="">None</MenuItem>
-            {parentTaskLov.map(task => (
-              <MenuItem key={task.id} value={task.id}>{task.name}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl fullWidth>
-          <InputLabel id="category-label">Task Category</InputLabel>
-          <Select
-            labelId="category-label"
-            label="Task Category"
-            value={state.categoryId}
-            onChange={e => dispatch({ type: 'SET_FIELD', field: 'categoryId', value: Number(e.target.value) })}
-            required
-          >
-            {categoryLov.map(category => (
-              <MenuItem key={category.id} value={category.id}>{category.name}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+
+
         <TextField
           label="Priority"
           type="number"
-          value={state.priority}
+          value={formState.priority}
           onChange={e => dispatch({ type: 'SET_FIELD', field: 'priority', value: e.target.value })}
           required
         />
         <TextField
           label="Total Required Man Hour"
           type="number"
-          value={state.totalRequiredManHour}
+          value={formState.totalRequiredManHour}
           onChange={e => dispatch({ type: 'SET_FIELD', field: 'totalRequiredManHour', value: e.target.value })}
           required
         />
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DateTimePicker
             label="Planned Start"
-            value={state.plannedStartDate}
+            value={formState.plannedStartDate}
             onChange={value => dispatch({ type: 'SET_FIELD', field: 'plannedStartDate', value })}
             slotProps={{ textField: { fullWidth: true } }}
           />
           <DateTimePicker
             label="Planned End"
-            value={state.plannedEndDate}
+            value={formState.plannedEndDate}
             onChange={value => dispatch({ type: 'SET_FIELD', field: 'plannedEndDate', value })}
             slotProps={{ textField: { fullWidth: true } }}
           />

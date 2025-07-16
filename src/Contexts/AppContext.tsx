@@ -12,7 +12,7 @@ import Navbar from '../components/Navbar/Navbar';
 import {
   AppContextType,
   CustomModalProps,
-  FlightCoordinateRangeFilter,
+  
   
 } from '../Models/Models';
 import CustomModal from '../components/CustomModal/CustomModal';

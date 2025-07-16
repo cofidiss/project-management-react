@@ -6,6 +6,7 @@ import Navbar from './components/Navbar/Navbar';
 import AddProject from './components/Project/AddProject';
 import UpdateProject from './components/Project/UpdateProject';
 import FilterProject from './components/Project/FilterProject';
+import ProjectDetail from './components/Project/ProjectDetail';
 const App: React.FC = () => {
   console.log('App renderer');
   return (
@@ -21,7 +22,8 @@ const App: React.FC = () => {
 >
   <Routes>
     <Route path="/add" element={<AddProject />} />
-    <Route path="/FilterProject" element={<FilterProject />} />
+    <Route path="/project/list" element={<FilterProject />} />
+    <Route path="/project/detail/:id" element={<ProjectDetail />} />
   </Routes>
 </Box>
 

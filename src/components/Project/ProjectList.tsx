@@ -21,6 +21,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { AppContext } from '../../Contexts/AppContext';
 import { FilteredProject, ProjectListProps } from '../../Models/Models';
 import UpdateProject from './UpdateProject';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -35,11 +36,17 @@ const ProjectList: React.FC<ProjectListProps> = ({
 }) => {
     const baseUrl = process.env.REACT_APP_BASE_URL;
     const { startLoading, stopLoading,setModal1State,setModal2State } = useContext(AppContext);
+
+
+    
+const navigate = useNavigate();
+
+const onProjectDetailClick = (projectId:number) => {
+
+  navigate(`/project/detail/${projectId}`);
+};
+
   const onEditClick = (projectId:number)=> {
-
-
-
-
 
   const modalChildren = (
     <div>
@@ -149,7 +156,7 @@ const ProjectList: React.FC<ProjectListProps> = ({
     </Tooltip>
   </IconButton>
 
-  <IconButton aria-label="more" >
+  <IconButton aria-label="more"  onClick={() => onProjectDetailClick(project.id)}>
     <Tooltip title="Diğer">
       <MoreHorizIcon />
     </Tooltip>
