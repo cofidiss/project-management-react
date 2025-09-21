@@ -193,3 +193,9 @@ export enum  UserRole{
     write,
     delete,
 };
+
+
+export type PieData = {
+  label: string;
+  value: number;
+};

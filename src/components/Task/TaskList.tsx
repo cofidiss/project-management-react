@@ -112,12 +112,15 @@ const TaskList: React.FC<TaskListProps> = ({ projectId }) => {
     getTaskForProject(projectId);
   }, [projectId]);
 
-  const renderTaskRow = (task: TaskInfo, index: number) => (
-    <>
-      <TableRow
-        key={task.id}
-        sx={{ '&:hover': { backgroundColor: '#f0f0f0' }, backgroundColor: index % 2 === 0 ? '#fff' : '#f9f9f9' }}
-      >
+  const renderTaskRow = (task: TaskInfo, index: number) => {
+    if (task.parentTaskId) 
+      return null;
+    return (
+      <>
+        <TableRow
+          key={task.id}
+          sx={{ '&:hover': { backgroundColor: '#f0f0f0' }, backgroundColor: index % 2 === 0 ? '#fff' : '#f9f9f9' }}
+        >
         <TableCell>
           <Tooltip title="Add"><IconButton onClick={() => onAddTaskClick(task.projectId.toString(), task.id.toString())}><AddIcon /></IconButton></Tooltip>
           <Tooltip title="Edit"><IconButton onClick={() => onEditTaskClick(task.id.toString())}><EditIcon /></IconButton></Tooltip>
@@ -160,7 +163,7 @@ const TaskList: React.FC<TaskListProps> = ({ projectId }) => {
         </TableRow>
       ))}
     </>
-  );
+  )};
 
   return (
     <div>
