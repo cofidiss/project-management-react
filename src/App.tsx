@@ -9,6 +9,9 @@ import FilterProject from './components/Project/FilterProject';
 import ProjectDetail from './components/Project/ProjectDetail';
 import Login from './components/Login/Login';
 import SignUp from './components/SignUp/SignUp';
+import PieChart  from './components/PieChart/PieChart';
+import MyPieChart from './components/PieChart/PieChart';
+import Summary from './components/Report/Summary';
 
 const App: React.FC = () => {
   console.log('App renderer');
@@ -29,6 +32,7 @@ const App: React.FC = () => {
     <Route path="/project/add" element={<AddProject />} />
     <Route path="/project/list" element={<FilterProject />} />
     <Route path="/project/detail/:id" element={<ProjectDetail />} />
+        <Route path="/report/summary/" element={<Summary  />} />
   </Routes>
 </Box>
 

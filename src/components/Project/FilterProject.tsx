@@ -261,7 +261,7 @@ useEffect(() => {
       </Typography>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DateRangePicker
-          localeText={{ start: "Planned Start", end: "Planned End" }}
+          localeText={{ start: "Actual Start", end: "Actual End" }}
           slotProps={{
             actionBar: {
               actions: ["clear"],
