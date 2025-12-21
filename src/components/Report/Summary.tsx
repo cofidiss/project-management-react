@@ -73,13 +73,8 @@ setTaskData(data);
     fetchPieData();
   }, []);
 const renderPieChart = (data: PieData[], title: string) => (
-  <div className="flex flex-col items-center min-w-[250px] max-w-[300px] m-4"     style={{
-        border: "2px solid #ccc",   // Kenarlık
-        borderRadius: "12px",       // Köşe yuvarlama
-        padding: "16px",            // İç boşluk
-        boxShadow: "0 4px 8px rgba(0,0,0,0.1)" // Hafif gölge (opsiyonel)
-      }}>
-    <h3 className="mb-2 font-semibold" style={{ textAlign: "center" }}>{title}</h3>
+  <div className="flex flex-col items-center min-w-[250px] max-w-[300px] m-4">
+    <h3 className="mb-2 font-semibold">{title}</h3>
     <PieChart data={data} />
   </div>
 );
