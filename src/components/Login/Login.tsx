@@ -67,8 +67,9 @@ const Login: React.FC = () => {
           console.log('Giriş başarılı');
               IsLoggedIn(baseUrl as string).then((result) => {
                     setIsLoggedIn(result);
+                        navigate('/');
                   });
-          navigate('/');
+      
         } else {
           return response.text().then(() => setError('Login is unsuccessful.'));
         }

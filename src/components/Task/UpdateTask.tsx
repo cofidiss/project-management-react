@@ -37,7 +37,7 @@ const initialState: UpdateTaskFormState = {
 const UpdateTask: React.FC<UpdateTaskProps> = ({ taskId ,getTaskForProject}) => {
   const [formState, dispatch] = useReducer(reducer, initialState);
   const baseUrl = process.env.REACT_APP_BASE_URL;
-  const { startLoading, stopLoading, setModal2State } = useContext(AppContext);
+  const { startLoading, stopLoading, setModal2State, setModal1State } = useContext(AppContext);
   const [statusLov, setStatusLov] = useState<CommonLov[]>([]);
 
   const getTaskInfo = (taskId: string | null) => {
@@ -116,7 +116,10 @@ const UpdateTask: React.FC<UpdateTaskProps> = ({ taskId ,getTaskForProject}) => 
           title: 'Error',
           message: 'Error in task update',
           okButtonText: 'Ok',
-          okButtonClick: () => setModal2State({ isOpen: false })
+          okButtonClick: () => {
+            setModal2State({ isOpen: false });
+            setModal1State({ isOpen: false });
+          }
         });
       })
       .finally(() => {

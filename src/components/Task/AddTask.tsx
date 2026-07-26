@@ -31,7 +31,7 @@ const AddTask: React.FC<AddTaskProps> = ({ projectId , getTaskForProject,parentT
     initialState.projectId = projectId || ''; 
   const [formState, dispatch] = useReducer(reducer, initialState);
   const baseUrl = process.env.REACT_APP_BASE_URL;
-  const { startLoading, stopLoading, setModal2State } = useContext(AppContext);
+  const { startLoading, stopLoading, setModal2State, setModal1State } = useContext(AppContext);
   const [categoryLov, setCategoryLov] = useState<CommonLov[]>([]);
   // Proje ve parent task için örnek veri, API'den çekebilirsiniz
 
@@ -90,6 +90,7 @@ let modalMessage :string;
     okButtonClick:()=> {
   getTaskForProject(projectId)
       setModal2State({isOpen:false});
+      setModal1State({isOpen:false});
     },
             
             })

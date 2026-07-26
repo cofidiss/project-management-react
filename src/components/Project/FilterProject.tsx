@@ -115,10 +115,7 @@ const FilterProject: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!isLoggedIn) {
-      navigate("/login");
-      return;
-    }
+
     setLovState(
       setStatusLov,
       "api/project/getStatusLov",
@@ -137,7 +134,10 @@ const FilterProject: React.FC = () => {
     filterProjects(filterProjectParam);
   }, []);
 useEffect(() => {
-  
+      if (!isLoggedIn) {
+      navigate("/login");
+      return;
+    }
     filterProjects(filterProjectParam);
   }, [filterProjectParam.pageNumber, filterProjectParam.pageSize]);
 

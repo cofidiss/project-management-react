@@ -86,62 +86,76 @@ const getProjectData = () => {
   };
 
   return (
-    <Box display="flex" flexDirection="column" gap={2} maxWidth={400}>
-      <TextField
-        label="Proje Name"
-        value={formState?.name || ''} 
-        onChange={e => dispatch({ type: 'SET_FIELD', field: 'name', value: e.target.value })}
-      />
-      <TextField
-        label="Description"
-        multiline rows={3}
-        value={formState?.description || ''}
-        onChange={e => dispatch({ type: 'SET_FIELD', field: 'description', value: e.target.value })}
-      />
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DateTimePicker
-          label="Planned Start"
-          value={formState?.plannedStartDate ? dayjs(formState.plannedStartDate) : null}
-          onChange={value => dispatch({ type: 'SET_FIELD', field: 'plannedStartDate', value })}
-          slotProps={{ textField: { fullWidth: true } }}
+    <Box display="flex" flexDirection="column" gap={2} width="100%">
+      <Box
+        display="grid"
+        gridTemplateColumns={{ xs: '1fr', md: '1fr 1fr' }}
+        gap={2}
+        width="100%"
+      >
+        <TextField
+          label="Proje Name"
+          value={formState?.name || ''}
+          onChange={e => dispatch({ type: 'SET_FIELD', field: 'name', value: e.target.value })}
+          fullWidth
         />
-        <DateTimePicker
-          label="Planned End"
-          value={formState?.plannedEndDate ? dayjs(formState.plannedEndDate) : null}
-          onChange={value => dispatch({ type: 'SET_FIELD', field: 'plannedEndDate', value })}
-          slotProps={{ textField: { fullWidth: true } }}
+        <TextField
+          label="Description"
+          multiline
+          rows={3}
+          value={formState?.description || ''}
+          onChange={e => dispatch({ type: 'SET_FIELD', field: 'description', value: e.target.value })}
+          fullWidth
         />
-      </LocalizationProvider>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DateTimePicker
+            label="Planned Start"
+            value={formState?.plannedStartDate ? dayjs(formState.plannedStartDate) : null}
+            onChange={value => dispatch({ type: 'SET_FIELD', field: 'plannedStartDate', value })}
+            slotProps={{ textField: { fullWidth: true } }}
+          />
+        </LocalizationProvider>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DateTimePicker
+            label="Planned End"
+            value={formState?.plannedEndDate ? dayjs(formState.plannedEndDate) : null}
+            onChange={value => dispatch({ type: 'SET_FIELD', field: 'plannedEndDate', value })}
+            slotProps={{ textField: { fullWidth: true } }}
+          />
+        </LocalizationProvider>
 
-      <FormControl fullWidth>
-        <InputLabel id="category-label">Category</InputLabel>
-        <Select
-          labelId="category-label"
-          value={formState?.categoryId || 0}
-          onChange={e => dispatch({ type: 'SET_FIELD', field: 'categoryId', value: Number(e.target.value) })}
-        >
-          {categoryLov.map(c => (
-            <MenuItem key={c.id} value={c.id}>{c.name}</MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+        <FormControl fullWidth>
+          <InputLabel id="category-label">Category</InputLabel>
+          <Select
+            labelId="category-label"
+            value={formState?.categoryId || 0}
+            onChange={e => dispatch({ type: 'SET_FIELD', field: 'categoryId', value: Number(e.target.value) })}
+          >
+            {categoryLov.map(c => (
+              <MenuItem key={c.id} value={c.id}>{c.name}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
 
-      <FormControl fullWidth>
-        <InputLabel id="status-label">Status</InputLabel>
-        <Select
-          labelId="status-label"
-          value={formState?.statusId || 0}
-          onChange={e => dispatch({ type: 'SET_FIELD', field: 'statusId', value: Number(e.target.value) })}
-        >
-          {statusLov.map(s => (
-            <MenuItem key={s.id} value={s.id}>{s.name}</MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+        <FormControl fullWidth>
+          <InputLabel id="status-label">Status</InputLabel>
+          <Select
+            labelId="status-label"
+            value={formState?.statusId || 0}
+            onChange={e => dispatch({ type: 'SET_FIELD', field: 'statusId', value: Number(e.target.value) })}
+          >
+            {statusLov.map(s => (
+              <MenuItem key={s.id} value={s.id}>{s.name}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
 
-      <Button variant="contained" color="primary" onClick={handleUpdate}>
-        Update Project
-      </Button>
+      <Box display="flex" justifyContent="flex-end" width="100%" mt={2}>
+        <Button variant="contained" color="primary" onClick={handleUpdate}>
+          Update Project
+        </Button>
+      </Box>
     </Box>
   );
 };
