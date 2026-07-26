@@ -1,0 +1,8 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: dockerfile
+    image: project-management-react:latest
+    ports:
+      - "3000:80"
