@@ -9,7 +9,7 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
 );
 root.render(
-  <div style={{ height: '100vh' }}>
+  <div>
     <BrowserRouter>
       <AppProvider>
         <App />

@@ -19,7 +19,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { AppContext } from '../../Contexts/AppContext';
-import { FilteredProject, ProjectListProps } from '../../Models/Models';
+import { ProjectListProps, UserRole } from '../../Models/Models';
+import { formatDateForDisplay } from '../../utils';
 import UpdateProject from './UpdateProject';
 import { useNavigate } from 'react-router-dom';
 
@@ -35,7 +36,8 @@ const ProjectList: React.FC<ProjectListProps> = ({
   filterProjects
 }) => {
     const baseUrl = process.env.REACT_APP_BASE_URL;
-    const { startLoading, stopLoading,setModal1State,setModal2State } = useContext(AppContext);
+    const { startLoading, stopLoading,setModal1State,setModal2State,userRole } = useContext(AppContext);
+  const canModifyProjects = userRole === UserRole.modify;
 
 
     
@@ -122,7 +124,9 @@ const onProjectDetailClick = (projectId:number) => {
         <Table>
           <TableHead>
             <TableRow>
-                              <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Action</TableCell>
+        
+                <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Action</TableCell>
+          
               <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Project No</TableCell>
               <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Name</TableCell>
               <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Description</TableCell>
@@ -130,6 +134,8 @@ const onProjectDetailClick = (projectId:number) => {
               <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Category</TableCell>
               <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Actual Start</TableCell>
               <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Actual End</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Planned Start</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Planned End</TableCell>
 
             </TableRow>
           </TableHead>
@@ -143,33 +149,40 @@ const onProjectDetailClick = (projectId:number) => {
                   },
                   backgroundColor: index % 2 === 0 ? '#ffffff' : '#f9f9f9'
                 }}
-              >      <TableCell>
-  <IconButton aria-label="edit" onClick={() => onEditClick(project.id)}>
-    <Tooltip title="Güncelle">
-      <EditIcon />
-    </Tooltip>
-  </IconButton>
+              >
+                <TableCell>               
+             {canModifyProjects && (
+                  <div>
+    <IconButton aria-label="edit" onClick={() => onEditClick(project.id)}>
+                      <Tooltip title="Güncelle">
+                        <EditIcon />
+                      </Tooltip>
+                    </IconButton>
 
-  <IconButton aria-label="delete" onClick={() => onDeleteClick(project.id)}>
-    <Tooltip title="Sil">
-      <DeleteIcon />
-    </Tooltip>
-  </IconButton>
-
-  <IconButton aria-label="more"  onClick={() => onProjectDetailClick(project.id)}>
-    <Tooltip title="Diğer">
-      <MoreHorizIcon />
-    </Tooltip>
-  </IconButton>
-</TableCell>
+                    <IconButton aria-label="delete" onClick={() => onDeleteClick(project.id)}>
+                      <Tooltip title="Sil">
+                        <DeleteIcon />
+                      </Tooltip>
+                    </IconButton>
+                  </div>
+                  
+                )}
+                    <IconButton aria-label="more" onClick={() => onProjectDetailClick(project.id)}>
+                      <Tooltip title="Diğer">
+                        <MoreHorizIcon />
+                      </Tooltip>
+                    </IconButton>
+                  </TableCell>
+   
                 <TableCell>{project.id}</TableCell>
                 <TableCell>{project.name}</TableCell>
                 <TableCell>{project.description}</TableCell>
                 <TableCell>{project.status}</TableCell>
                 <TableCell>{project.category}</TableCell>
-                <TableCell>{project.actualStartDate }</TableCell>
-                <TableCell>{project.actualEndDate }</TableCell>
-        
+                <TableCell>{formatDateForDisplay(project.actualStartDate)}</TableCell>
+                <TableCell>{formatDateForDisplay(project.actualEndDate)}</TableCell>
+          <TableCell>{formatDateForDisplay(project.plannedStartDate)}</TableCell>
+                <TableCell>{formatDateForDisplay(project.plannedEndDate)}</TableCell>
               </TableRow>
             ))}
           </TableBody>

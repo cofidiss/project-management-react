@@ -23,10 +23,12 @@ import {
   MenuItem,
 } from "@mui/material";
 import { UserRole } from "../../Models/Models";
+import { IsLoggedIn, LogOut } from "../../services/authService";
 
 const Navbar: React.FC = () => {
   const navigate = useNavigate();
-  const { setIsLoggedIn, isLoggedIn, userRoles, setUserRoles } =
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+  const { setIsLoggedIn, isLoggedIn, userRole, setUserRole } =
     useContext(AppContext);
   const [settingsAnchorEl, setSettingsAnchorEl] = useState<null | HTMLElement>(
     null
@@ -37,7 +39,7 @@ const Navbar: React.FC = () => {
   const [reportAnchorEl, setReportAnchorEl] = useState<null | HTMLElement>(
     null
   );
-  setIsLoggedIn(true); // Temporary fix for testing, remove later
+
   // Settings menu handlers
   const handleSettingsOpen = (event: React.MouseEvent<HTMLDivElement>) => {
     setSettingsAnchorEl(event.currentTarget);
@@ -61,11 +63,16 @@ const Navbar: React.FC = () => {
     handleSettingsClose();
   };
 
-  const handleLogoutClick = () => {
-    localStorage.removeItem("JWT");
-    setIsLoggedIn(false);
-    navigate("/login");
-    handleSettingsClose();
+  const handleLogoutClick = () => {  
+    LogOut(baseUrl as string).then((result) => {      
+
+      IsLoggedIn(baseUrl as string).then((result) => {
+        setIsLoggedIn(result);
+              navigate("/login");
+      });
+
+      handleSettingsClose();
+    });
   };
 
   // Project List & Add handlers
@@ -153,7 +160,7 @@ const Navbar: React.FC = () => {
                 <ListIcon sx={{ marginRight: "10px" }} /> Project List
               </MenuItem>
 
-              {userRoles.includes(UserRole.write) && (
+              {userRole === UserRole.modify && (
                 <MenuItem onClick={handleProjectAddClick}>
                   <AddIcon sx={{ marginRight: "10px" }} /> Add Project
                 </MenuItem>

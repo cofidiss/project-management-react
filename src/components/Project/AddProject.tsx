@@ -1,11 +1,12 @@
 import React, { useContext, useEffect, useReducer, useState } from 'react';
-import { TextField, Button, MenuItem, Select, InputLabel, FormControl, Box, Typography } from '@mui/material';
+import { TextField, Button, MenuItem, Select, InputLabel, FormControl, Box, Typography, Container } from '@mui/material';
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
 import { setLovState } from '../../utils';
 import { AppContext } from '../../Contexts/AppContext';
 import { AddProjectFormState, AddProjectProps, CommonLov, FormActionType } from '../../Models/Models';
+import { useNavigate } from 'react-router-dom';
 
 // Kategori örnekleri
 
@@ -31,6 +32,7 @@ function reducer(state: AddProjectFormState, action: FormActionType<AddProjectFo
 }
 
 const AddProject: React.FC<AddProjectProps> = () => {
+  const navigate = useNavigate();
   const [formState, dispatch] = useReducer(reducer, initialState);
       const baseUrl = process.env.REACT_APP_BASE_URL;
         const { startLoading, stopLoading ,setModal2State} = useContext(AppContext);
@@ -75,7 +77,7 @@ let modalMessage :string;
     title:modalMessage,
     okButtonText:"Ok",
     okButtonClick:()=> {
-  
+  navigate("/project/list");
       setModal2State({isOpen:false});
     },
             
@@ -85,8 +87,21 @@ let modalMessage :string;
 };
 
   return (
+  <Container maxWidth="xs">
 
-      <Box id="asd" display="flex" flexDirection="column" gap={2} maxWidth={400} padding={2} borderRadius={2}>
+
+      <Box
+        id="asd"
+        display="flex"
+        flexDirection="column"
+        gap={2}
+        width="100%"
+        maxWidth="100%"
+        minHeight="100vh"
+        padding={2}
+        borderRadius={2}
+        boxSizing="border-box"
+      >
         <Typography variant="h5" gutterBottom justifyContent={"center"} textAlign="center">
           Add Project
         </Typography>
@@ -135,7 +150,7 @@ let modalMessage :string;
          Add Project
         </Button>
       </Box>
-
+  </Container>
   );
 };
 

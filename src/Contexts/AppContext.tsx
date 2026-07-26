@@ -17,6 +17,7 @@ import {
 } from '../Models/Models';
 import CustomModal from '../components/CustomModal/CustomModal';
 import { UserRole } from '../Models/Models';
+import { IsLoggedIn } from '../services/authService';
 const theme = createTheme({
   palette: {
     background: {
@@ -34,16 +35,16 @@ export const AppContext = React.createContext<AppContextType>({
   refreshNavbar: () => {},
   setIsLoggedIn: () => {},
   isLoggedIn: false,
-  setUserRoles: () => {},
+  setUserRole: () => {},
   globalCss: { componentBackgroundColor: '#f9f9f933' },
-  userRoles: []
+  userRole: null
 });
 
 export const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const baseUrl = process.env.REACT_APP_BASE_URL;
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loadingCount, setLoadingCount] = useState(0);
-  const [userRoles, setUserRoles] = useState<UserRole[]>([]); 
+  const [userRole, setUserRole] = useState<UserRole | null>(null);
 
   const [modal1State, setModal1State] = useState<CustomModalProps>({
     isOpen: false,
@@ -85,9 +86,10 @@ export const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
   useEffect(() => {
     console.log('isLoggedIn' + isLoggedIn);
     if (!isLoggedIn) {
-      setUserRoles([]);
+      setUserRole(null);
       return;
     }
+    debugger;
     var response = startLoading();
     fetch(`${baseUrl}/api/user/getUserRole`, {
       method: 'GET',
@@ -98,24 +100,26 @@ export const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
       .then((response) => {
         if (response.ok) {
           console.log('getUserRole başarılı');
-          return response.json().then((data) => { 
-     const  roles : UserRole[]  = [];
-            data.forEach((item: any, index: any) => roles.push(Number(item) as UserRole));
-            setUserRoles(roles);
+          return response.json().then((data) => {      
+            setUserRole( Number(data) as UserRole);
           });
         }
       })
       .catch((e) => {
-        console.log('getUserRole başarıosız ' + e);
+        console.log('getUserRole başarısız ' + e);
       })
       .finally(() => {
         stopLoading();
       });
   }, [isLoggedIn]);
+
   useEffect(() => {
-    const isAuthenticated = localStorage.getItem('JWT') != null;
-    setIsLoggedIn(isAuthenticated);
+    IsLoggedIn(baseUrl as string).then((result) => {
+      setIsLoggedIn(result);
+    });
   }, []);
+
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <AppContext.Provider
@@ -129,8 +133,8 @@ export const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
           setIsLoggedIn: setIsLoggedIn,
           isLoggedIn: isLoggedIn,
           globalCss: { componentBackgroundColor: '#f9f9f933' },
-          userRoles: userRoles,
-          setUserRoles: setUserRoles    
+          userRole: userRole,
+          setUserRole: setUserRole
         }}
       >
         <Navbar />

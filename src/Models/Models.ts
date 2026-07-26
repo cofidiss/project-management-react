@@ -17,8 +17,8 @@ export interface AppContextType {
   setModal2State: (modalProps: Omit<CustomModalProps, 'onClose'>) => void; // Method to set modal state
   refreshNavbar: () => void;
   setIsLoggedIn: (param: boolean) => void;
-  userRoles: UserRole[];
-  setUserRoles: React.Dispatch<React.SetStateAction<UserRole[]>>;
+  userRole: UserRole | null;
+  setUserRole: React.Dispatch<React.SetStateAction<UserRole | null>>;
   isLoggedIn: boolean;
   globalCss: globalCss;
 
@@ -190,8 +190,7 @@ export type SignUpFormAction =
 
 export enum  UserRole{
  read,
-    write,
-    delete,
+    modify
 };
 
 

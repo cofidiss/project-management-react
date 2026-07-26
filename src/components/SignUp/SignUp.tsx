@@ -21,6 +21,7 @@ import {
   SignUpFormState,
   UserRole,
 } from '../../Models/Models';
+import { IsLoggedIn } from '../../services/authService';
 
 const Signup: React.FC = () => {
   const initialState: SignUpFormState = {
@@ -37,10 +38,12 @@ const Signup: React.FC = () => {
   const baseUrl = process.env.REACT_APP_BASE_URL;
   const { startLoading, stopLoading, setIsLoggedIn } = useContext(AppContext);
  
-  const roleLov = Object.entries(UserRole).map(([key, value]) => ({
-    id: value,
-    name: key
-  }));
+  const roleLov = Object.entries(UserRole)
+    .filter(([key]) => Number.isNaN(Number(key)))
+    .map(([key, value]) => ({
+      id: value as number,
+      name: key,
+    }));
   function formReducer(
     state: SignUpFormState,
     action: SignUpFormAction,
@@ -91,7 +94,9 @@ const Signup: React.FC = () => {
         .then((response) => {
           if (response.ok) {
             console.log('Signup başarılı');
-            setIsLoggedIn(true);
+          IsLoggedIn(baseUrl as string).then((result) => {
+                setIsLoggedIn(result);
+              });
             navigate('/');
           } else {
             response.text().then((x) =>

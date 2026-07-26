@@ -8,11 +8,12 @@ import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
 import { Task } from "@mui/icons-material";
 import TaskList from "../Task/TaskList";
+import { formatDateForDisplay } from "../../utils";
 const ProjectDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [projectDetailInfo, setProjectDetailInfo] = useState<ProjectDetailInfo | null>(null);
   const baseUrl = process.env.REACT_APP_BASE_URL;
-  const { startLoading, stopLoading, setModal1State } = useContext(AppContext);
+  const { startLoading, stopLoading, setModal1State, userRole } = useContext(AppContext);
 useEffect(() => {
     getProjectData();
   // Fetch project details or perform any side effects here
@@ -82,7 +83,7 @@ const getProjectData = () => {
         Planned Start
       </Typography>
       <Typography variant="body1" sx={{ ml: 2 }}>
-        {projectDetailInfo?.plannedStartDate ?? "-"}
+        {formatDateForDisplay(projectDetailInfo?.plannedStartDate)}
       </Typography>
     </Box>
   </Grid>
@@ -92,7 +93,7 @@ const getProjectData = () => {
         Planned End
       </Typography>
       <Typography variant="body1" sx={{ ml: 2 }}>
-        {projectDetailInfo?.plannedEndDate ?? "-"}
+        {formatDateForDisplay(projectDetailInfo?.plannedEndDate)}
       </Typography>
     </Box>
   </Grid>
@@ -102,7 +103,7 @@ const getProjectData = () => {
         Actual Start
       </Typography>
       <Typography variant="body1" sx={{ ml: 2 }}>
-        {projectDetailInfo?.actualStartDate ?? "-"}
+        {formatDateForDisplay(projectDetailInfo?.actualStartDate)}
       </Typography>
     </Box>
   </Grid>
@@ -112,7 +113,7 @@ const getProjectData = () => {
         Actual End
       </Typography>
       <Typography variant="body1" sx={{ ml: 2 }}>
-        {projectDetailInfo?.actualEndDate ?? "-"}
+        {formatDateForDisplay(projectDetailInfo?.actualEndDate)}
       </Typography>
     </Box>
   </Grid>

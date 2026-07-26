@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Container,
   TextField,
@@ -81,7 +82,7 @@ import ProjectList from "./ProjectList";
   };
 const FilterProject: React.FC = () => {
   debugger;
-
+  const navigate = useNavigate();
   const defaultFilterParam: FilterProjectParameters = {
     pageNumber: 0, // Default değer
     pageSize: 5,
@@ -94,7 +95,7 @@ const FilterProject: React.FC = () => {
   const [filterProjectParam, setFilterProjectParam] =
     useState<FilterProjectParameters>(defaultFilterParam);
   const baseUrl = process.env.REACT_APP_BASE_URL;
-  const { startLoading, stopLoading, setModal1State } = useContext(AppContext);
+  const { startLoading, stopLoading, setModal1State, isLoggedIn } = useContext(AppContext);
 
   const filterProjects = async (filterParams: FilterProjectParameters) => {
     try {
@@ -114,6 +115,10 @@ const FilterProject: React.FC = () => {
   };
 
   useEffect(() => {
+    if (!isLoggedIn) {
+      navigate("/login");
+      return;
+    }
     setLovState(
       setStatusLov,
       "api/project/getStatusLov",

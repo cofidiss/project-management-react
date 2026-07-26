@@ -18,7 +18,8 @@ const App: React.FC = () => {
   return (
 <Box
   bgcolor={"white"}
-  sx={{
+  sx={{  minHeight: '100vh',
+        minWidth: '100%',
     boxShadow: '0 4px 24px 0 rgba(0,0,0,0.08)', // Yumuşak kenar gölgesi
     borderRadius: 3, // Hafif köşe yumuşatma
     m: 2, // Dış boşluk
@@ -30,9 +31,10 @@ const App: React.FC = () => {
       <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
     <Route path="/project/add" element={<AddProject />} />
-    <Route path="/project/list" element={<FilterProject />} />
     <Route path="/project/detail/:id" element={<ProjectDetail />} />
         <Route path="/report/summary/" element={<Summary  />} />
+            <Route path="/" element={<FilterProject />} />
+            <Route path="/project/list" element={<FilterProject />} />
   </Routes>
 </Box>
 

@@ -13,7 +13,8 @@ import {
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../../Contexts/AppContext';
-import '../../styles/global.css';
+
+import { IsLoggedIn } from '../../services/authService';
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -64,7 +65,9 @@ const Login: React.FC = () => {
       .then((response) => {
         if (response.ok) {
           console.log('Giriş başarılı');
-          setIsLoggedIn(true);
+              IsLoggedIn(baseUrl as string).then((result) => {
+                    setIsLoggedIn(result);
+                  });
           navigate('/');
         } else {
           return response.text().then(() => setError('Login is unsuccessful.'));

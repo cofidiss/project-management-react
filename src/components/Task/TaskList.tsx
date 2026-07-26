@@ -7,7 +7,8 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { TaskInfo, TaskListProps } from "../../Models/Models";
+import { TaskInfo, TaskListProps, UserRole } from "../../Models/Models";
+import { formatDateForDisplay } from "../../utils";
 import UpdateTask from "./UpdateTask";
 
 const TaskList: React.FC<TaskListProps> = ({ projectId }) => {
@@ -15,7 +16,8 @@ const TaskList: React.FC<TaskListProps> = ({ projectId }) => {
   const [expandedRows, setExpandedRows] = useState<{ [key: number]: TaskInfo[] }>({});
 
   const baseUrl = process.env.REACT_APP_BASE_URL;
-  const { startLoading, stopLoading, setModal1State, setModal2State } = useContext(AppContext);
+  const { startLoading, stopLoading, setModal1State, setModal2State, userRole } = useContext(AppContext);
+  const canModifyTasks = userRole === UserRole.modify;
 
   const onAddTaskClick = (projectId: string | null, parentTaskId: string | null): void => {
     debugger;
@@ -121,24 +123,26 @@ const TaskList: React.FC<TaskListProps> = ({ projectId }) => {
           key={task.id}
           sx={{ '&:hover': { backgroundColor: '#f0f0f0' }, backgroundColor: index % 2 === 0 ? '#fff' : '#f9f9f9' }}
         >
-        <TableCell>
-          <Tooltip title="Add"><IconButton onClick={() => onAddTaskClick(task.projectId.toString(), task.id.toString())}><AddIcon /></IconButton></Tooltip>
-          <Tooltip title="Edit"><IconButton onClick={() => onEditTaskClick(task.id.toString())}><EditIcon /></IconButton></Tooltip>
-          <Tooltip title="Delete"><IconButton onClick={() => onDeleteTaskClick(task.id.toString())}><DeleteIcon /></IconButton></Tooltip>
-          {task.hasChildTasks && (
-            <Tooltip title="View Subtasks">
-              <IconButton onClick={() => fetchChildTasks(task.id)}><VisibilityIcon /></IconButton>
-            </Tooltip>
-          )}
-        </TableCell>
+        {canModifyTasks && (
+          <TableCell>
+            <Tooltip title="Add"><IconButton onClick={() => onAddTaskClick(task.projectId.toString(), task.id.toString())}><AddIcon /></IconButton></Tooltip>
+            <Tooltip title="Edit"><IconButton onClick={() => onEditTaskClick(task.id.toString())}><EditIcon /></IconButton></Tooltip>
+            <Tooltip title="Delete"><IconButton onClick={() => onDeleteTaskClick(task.id.toString())}><DeleteIcon /></IconButton></Tooltip>
+            {task.hasChildTasks && (
+              <Tooltip title="View Subtasks">
+                <IconButton onClick={() => fetchChildTasks(task.id)}><VisibilityIcon /></IconButton>
+              </Tooltip>
+            )}
+          </TableCell>
+        )}
         <TableCell>{task.id}</TableCell>
         <TableCell>{task.name}</TableCell>
         <TableCell>{task.totalRequiredManHour}</TableCell>
         <TableCell>{task.completedManHour}</TableCell>
-        <TableCell>{task.actualStartDate}</TableCell>
-        <TableCell>{task.actualEndDate}</TableCell>
-        <TableCell>{task.plannedStartDate}</TableCell>
-        <TableCell>{task.plannedEndDate}</TableCell>
+        <TableCell>{formatDateForDisplay(task.actualStartDate)}</TableCell>
+        <TableCell>{formatDateForDisplay(task.actualEndDate)}</TableCell>
+        <TableCell>{formatDateForDisplay(task.plannedStartDate)}</TableCell>
+        <TableCell>{formatDateForDisplay(task.plannedEndDate)}</TableCell>
         <TableCell>{task.projectId}</TableCell>
         <TableCell>{task.parentTaskId ?? '-'}</TableCell>
         <TableCell>{task.priority}</TableCell>
@@ -146,16 +150,18 @@ const TaskList: React.FC<TaskListProps> = ({ projectId }) => {
       </TableRow>
       {expandedRows[task.id]?.map((subtask, i) => (
         <TableRow key={`sub-${subtask.id}`} sx={{ backgroundColor: '#e3f2fd' }}>
-          <TableCell> <Tooltip title="Edit"><IconButton onClick={() => onEditTaskClick(subtask.id.toString())}><EditIcon /></IconButton></Tooltip>
-          <Tooltip title="Delete"><IconButton onClick={() => onDeleteTaskClick(subtask.id.toString())}><DeleteIcon /></IconButton></Tooltip></TableCell>
+          {canModifyTasks && (
+            <TableCell><Tooltip title="Edit"><IconButton onClick={() => onEditTaskClick(subtask.id.toString())}><EditIcon /></IconButton></Tooltip>
+            <Tooltip title="Delete"><IconButton onClick={() => onDeleteTaskClick(subtask.id.toString())}><DeleteIcon /></IconButton></Tooltip></TableCell>
+          )}
           <TableCell>{subtask.id}</TableCell>
           <TableCell>{subtask.name}</TableCell>
           <TableCell>{subtask.totalRequiredManHour}</TableCell>
           <TableCell>{subtask.completedManHour}</TableCell>
-          <TableCell>{subtask.actualStartDate}</TableCell>
-          <TableCell>{subtask.actualEndDate}</TableCell>
-          <TableCell>{subtask.plannedStartDate}</TableCell>
-          <TableCell>{subtask.plannedEndDate}</TableCell>
+          <TableCell>{formatDateForDisplay(subtask.actualStartDate)}</TableCell>
+          <TableCell>{formatDateForDisplay(subtask.actualEndDate)}</TableCell>
+          <TableCell>{formatDateForDisplay(subtask.plannedStartDate)}</TableCell>
+          <TableCell>{formatDateForDisplay(subtask.plannedEndDate)}</TableCell>
           <TableCell>{subtask.projectId}</TableCell>
           <TableCell>{subtask.parentTaskId ?? '-'}</TableCell>
           <TableCell>{subtask.priority}</TableCell>
@@ -167,19 +173,23 @@ const TaskList: React.FC<TaskListProps> = ({ projectId }) => {
 
   return (
     <div>
-      <Grid sx={{ xs: 12, display: "flex", justifyContent: "flex-end" }}>
-        <Box display="flex" justifyContent="flex-end" width="100%" mt={2}>
-          <Button variant="contained" style={{ marginRight: "10px", backgroundColor: "#4caf50", color: "#fff" }} startIcon={<AddIcon />} onClick={() => onAddTaskClick(projectId, null)}>
-            Add
-          </Button>
-        </Box>
-      </Grid>
+      {canModifyTasks && (
+        <Grid sx={{ xs: 12, display: "flex", justifyContent: "flex-end" }}>
+          <Box display="flex" justifyContent="flex-end" width="100%" mt={2}>
+            <Button variant="contained" style={{ marginRight: "10px", backgroundColor: "#4caf50", color: "#fff" }} startIcon={<AddIcon />} onClick={() => onAddTaskClick(projectId, null)}>
+              Add
+            </Button>
+          </Box>
+        </Grid>
+      )}
       <Typography variant="h5" align="center" gutterBottom sx={{ mt: 2 }}>Tasks</Typography>
       <TableContainer component={Paper} sx={{ backgroundColor: 'inherit', borderRadius: 2, boxShadow: 2 }}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Actions</TableCell>
+              {canModifyTasks && (
+                <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Actions</TableCell>
+              )}
               <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>id</TableCell>
               <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Name</TableCell>
               <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Total Man Hour</TableCell>
