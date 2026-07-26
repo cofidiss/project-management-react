@@ -1,46 +1,115 @@
-# Getting Started with Create React App
+# Project Management React
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a project management focused React application. It includes user authentication, project filtering/listing, project details, task management, and reporting screens.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- User authentication (Login / Signup)
+- Role-based authorization (read / modify)
+- Project filtering and pagination
+- Add, update, and delete projects
+- Project detail view
+- Add, update, and delete tasks with subtask visibility
+- Summary report and chart visualization
+- Modern and responsive UI built with Material UI
 
-### `npm start`
+## Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- React 19
+- TypeScript
+- React Router DOM
+- Material UI (MUI) + MUI Icons
+- MUI X Date Pickers / Date Range Picker
+- Day.js
+- Recharts
+- CRA (react-scripts)
+- Docker + Nginx (production image)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Project Structure
 
-### `npm test`
+```text
+src/
+	components/
+		Login/
+		Navbar/
+		Project/
+		Report/
+		SignUp/
+		Task/
+		PieChart/
+	Contexts/
+	Models/
+	services/
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Environment Variables
 
-### `npm run build`
+The application reads the API URL from the `.env` file:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```env
+REACT_APP_BASE_URL=http://localhost:3000
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Note: Create React App reads environment variables at build time. Restart the app after making any changes.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Local Setup
 
-### `npm run eject`
+1. Install dependencies:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```bash
+npm install
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+2. Start the development server:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```bash
+npm start
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+3. Open in your browser:
 
-## Learn More
+```text
+http://localhost:3000
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Run with Docker
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+The project is built using the existing `dockerfile` and served via Nginx.
+
+1. Build the image and start the app with Compose:
+
+```bash
+docker compose up --build
+```
+
+2. Access the application:
+
+```text
+http://localhost:3000
+```
+
+This setup is defined in [docker-compose.yml](docker-compose.yml) with the `3000:80` port mapping.
+
+## NPM Scripts
+
+- `npm start`: Run development server
+- `npm run build`: Create production build
+- `npm test`: Run tests
+
+## API Integration
+
+The frontend communicates with these endpoint groups:
+
+- `/api/user/*`
+- `/api/project/*`
+- `/api/task/*`
+
+Make sure your backend service is running and `REACT_APP_BASE_URL` is configured correctly.
+
+## Contributing
+
+You can open issues and submit pull requests. For major changes, it is recommended to open an issue first and discuss the approach.
+
+## License
+
+No license is currently defined in this repository. You can add a `LICENSE` file if needed.
