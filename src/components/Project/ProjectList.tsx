@@ -168,7 +168,7 @@ const onProjectDetailClick = (projectId:number) => {
                   
                 )}
                     <IconButton aria-label="more" onClick={() => onProjectDetailClick(project.id)}>
-                      <Tooltip title="Diğer">
+                      <Tooltip title="Detail">
                         <MoreHorizIcon />
                       </Tooltip>
                     </IconButton>
